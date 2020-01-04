@@ -23,7 +23,8 @@ class BurgerBuilder extends React.Component {
             salad: 0        
         },
         totalPrice: 0,
-        purchasable : false
+        purchasable : false,
+        purchasing: false
     }
 
     updatePurchaseState (ingredients) {
@@ -74,6 +75,20 @@ class BurgerBuilder extends React.Component {
 
     };
 
+    updatePurchasingState = () => {
+        this.setState ({purchasing: true});
+    }
+
+    cancelPurchasingState = () => {
+        this.setState ({purchasing: false});
+    }
+    continuePurchasing = () => {
+        alert("yess!")
+    }
+
+
+
+
     render ()
         {
             const disabledInfo  = {...this.state.ingredients};
@@ -83,16 +98,25 @@ class BurgerBuilder extends React.Component {
 
             return(
                 <Aux>
-                    <Modal>
-                        <OrderSummary ingredients = {this.state.ingredients} />
-                    </Modal>
+                    {
+                    this.state.purchasing ?
+                        <Modal show = {this.state.purchasing}
+                        clicked = {this.cancelPurchasingState} >
+                            <OrderSummary ingredients = {this.state.ingredients}
+                            cancelled = {this.cancelPurchasingState}
+                            continue = {this.continuePurchasing}
+                            />
+                        </Modal>: null
+                    }
                    <Burger  ingredients = {this.state.ingredients} />
                     <BuildControls  
                         purchasable = {this.state.purchasable}
                         price = {this.state.totalPrice}
                         ingredientAdded = {this.addIngredientHandler}
                         ingredientRemoved = {this.removeIngredientHandler}
-                        disabled = {disabledInfo}  />
+                        disabled = {disabledInfo} 
+                        purchasing = {this.updatePurchasingState}
+                        />
                 </Aux>
             );
            
